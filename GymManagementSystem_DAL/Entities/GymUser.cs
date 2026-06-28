@@ -26,5 +26,4 @@ namespace GymManagementSystem_DAL.Entities
             public string Street { get; set; } = null!;
             public string City { get; set; } = null!;
         }
-    }
 }

@@ -19,6 +19,9 @@ namespace GymManagementSystem_DAL.Data.Configurations
                     .WithOne(x => x.HealthRecord)
                      .HasForeignKey<HealthRecord>(x => x.Id); // HealthRecord.Id IS Member.Id (shared key)
 
+            builder.Property(X => X.Height).HasPrecision(5, 2); 
+            builder.Property(X => X.Weight).HasPrecision(5, 2); 
+
             builder.Ignore(X => X.CreatedAt);  // Member as its own these two columns already
             builder.Ignore(X => X.UpdatedAt);
         }
