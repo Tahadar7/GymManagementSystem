@@ -17,6 +17,11 @@ builder.Services.AddDbContext<GymDBContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(config =>
 {
     config.User.RequireUniqueEmail = true;
+    config.Password.RequireDigit = true;
+    config.Password.RequireLowercase = true;
+    config.Password.RequireUppercase = true;
+    config.Password.RequireNonAlphanumeric = true;
+    config.Password.RequiredLength = 8;
 })
 .AddEntityFrameworkStores<GymDBContext>();
 
