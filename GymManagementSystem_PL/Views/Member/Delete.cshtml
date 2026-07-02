@@ -1,0 +1,65 @@
+﻿@model MemberViewModel
+@{
+    ViewData["Title"] = "Delete Member";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow text-center p-4">
+
+                <div class="mb-3" style="font-size:60px;">⚠️</div>
+
+                <h4 class="fw-bold text-danger mb-2">Delete Member</h4>
+
+                <p class="text-muted mb-1">
+                    Are you sure you want to delete
+                    <strong>@Model.Name</strong>?
+                </p>
+
+                <div class="alert alert-warning text-start mt-3" role="alert">
+                    <strong>Warning:</strong> This action cannot be undone.
+                    All member data will be permanently removed.
+                    Deletion will be blocked if the member has upcoming session bookings.
+                </div>
+
+                <div class="bg-light rounded p-3 text-start mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        @if (string.IsNullOrEmpty(Model.Photo))
+                        {
+                            <img src="~/images/user.jpg"
+                                 class="rounded-circle"
+                                 style="width:50px; height:50px; object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/images/Members/@Model.Photo"
+                                 class="rounded-circle"
+                                 style="width:50px; height:50px; object-fit:cover;" />
+                        }
+                        <div>
+                            <strong>@Model.Name</strong>
+                            <div class="text-muted small">@Model.Email</div>
+                            <div class="text-muted small">@Model.Phone</div>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="d-flex justify-content-between gap-3">
+                        <a asp-controller="Member"
+                           asp-action="Index"
+                           class="btn btn-outline-secondary flex-fill">
+                            <i class="bi bi-x-circle me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-danger flex-fill">
+                            <i class="bi bi-trash me-2"></i>Yes, Delete
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

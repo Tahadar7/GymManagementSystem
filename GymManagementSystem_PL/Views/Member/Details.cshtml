@@ -1,0 +1,122 @@
+﻿@model MemberViewModel
+@{
+    ViewData["Title"] = "Member Details";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow">
+
+                <div class="text-center pt-4">
+                    @if (string.IsNullOrEmpty(Model.Photo))
+                    {
+                        <img src="~/images/user.jpg"
+                             alt="Default Avatar"
+                             class="rounded-circle"
+                             style="width:120px; height:120px; object-fit:cover; border:3px solid #fff;" />
+                    }
+                    else
+                    {
+                        <img src="~/images/Members/@Model.Photo"
+                             alt="@Model.Name"
+                             class="rounded-circle"
+                             style="width:120px; height:120px; object-fit:cover; border:3px solid #fff;" />
+                    }
+                </div>
+
+                <div class="card-body text-center">
+                    <h2 class="mb-1 text-primary">@Model.Name</h2>
+
+                    @if (Model.PlanName is not null)
+                    {
+                        <span class="badge bg-success mb-3">@Model.PlanName</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary mb-3">No Active Plan</span>
+                    }
+
+                    <div class="mt-3 text-start">
+                        <div class="row g-3">
+
+                            <div class="col-12">
+                                <div class="p-3 bg-light rounded">
+                                    <small class="text-muted d-block mb-1">Email</small>
+                                    <strong>@Model.Email</strong>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="p-3 bg-light rounded">
+                                    <small class="text-muted d-block mb-1">Phone</small>
+                                    <strong>@Model.Phone</strong>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded">
+                                    <small class="text-muted d-block mb-1">Gender</small>
+                                    <strong>@Model.Gender</strong>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded">
+                                    <small class="text-muted d-block mb-1">Date of Birth</small>
+                                    <strong>@Model.DateOfBirth</strong>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="p-3 bg-light rounded">
+                                    <small class="text-muted d-block mb-1">Address</small>
+                                    <strong>@(Model.Address ?? "No address on record")</strong>
+                                </div>
+                            </div>
+
+                            <!-- Membership dates only shown if member has an active plan -->
+                            @if (Model.PlanName is not null)
+                            {
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded">
+                                        <small class="text-muted d-block mb-1">Membership Start</small>
+                                        <strong>@Model.MemberShipStartDate</strong>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 bg-light rounded">
+                                        <small class="text-muted d-block mb-1">Membership End</small>
+                                        <strong>@Model.MemberShipEndDate</strong>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between gap-2 px-3 pb-3">
+                    <a asp-controller="Member"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary flex-fill">
+                        <i class="bi bi-arrow-left me-2"></i>Back to List
+                    </a>
+                    <a asp-controller="Member"
+                       asp-action="HealthRecord"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-outline-primary flex-fill">
+                        <i class="bi bi-heart-pulse me-2"></i>Health Record
+                    </a>
+                    <a asp-controller="Member"
+                       asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-primary flex-fill">
+                        <i class="bi bi-pencil me-2"></i>Edit
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
