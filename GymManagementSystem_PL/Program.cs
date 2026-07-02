@@ -1,3 +1,5 @@
+using GymManagementSystem_BLL.Interfaces;
+using GymManagementSystem_BLL.Services;
 using GymManagementSystem_DAL.Data.DBContexts;
 using GymManagementSystem_DAL.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +14,13 @@ builder.Services.AddDbContext<GymDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IMemberService, MemberService>();
+builder.Services.AddScoped<ITrainerService, TrainerService>();
+builder.Services.AddScoped<IPlanService, PlanService>();
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 
 // Register ASP.NET Core Identity roles
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(config =>
