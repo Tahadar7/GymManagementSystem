@@ -1,0 +1,118 @@
+﻿@model CreateTrainerViewModel
+@{
+    ViewData["Title"] = "Add Trainer";
+}
+
+<div class="container mt-4">
+    <header class="mb-4">
+        <h3 class="fw-bold">Add Trainer</h3>
+    </header>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()    <!--token returns which is validated to confirm the request-->
+
+        <div asp-validation-summary="All" class="alert alert-danger small"></div>
+
+        <div class="card border-0 shadow p-4 mb-4">
+            <h5 class="fw-bold text-primary mb-3">Personal Information</h5>
+            <hr>
+            <div class="row g-3">
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" type="email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Phone" class="form-label"></label>
+                    <input asp-for="Phone" class="form-control" placeholder="03XXXXXXXXX" />
+                    <span asp-validation-for="Phone" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="DateOfBirth" class="form-label"></label>
+                    <input asp-for="DateOfBirth" type="date" class="form-control" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Gender" class="form-label"></label>
+                    <select asp-for="Gender"
+                            asp-items="Html.GetEnumSelectList<Gender>()"
+                            class="form-select">
+                        <option value="">-- Select Gender --</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger small"></span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card border-0 shadow p-4 mb-4">
+            <h5 class="fw-bold text-primary mb-3">Address Information</h5>
+            <hr>
+            <div class="row g-3">
+
+                <div class="col-12 col-md-4">
+                    <label asp-for="BuildingNumber" class="form-label"></label>
+                    <input asp-for="BuildingNumber" class="form-control" />
+                    <span asp-validation-for="BuildingNumber" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <label asp-for="Street" class="form-label"></label>
+                    <input asp-for="Street" class="form-control" />
+                    <span asp-validation-for="Street" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <label asp-for="City" class="form-label"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger small"></span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card border-0 shadow p-4 mb-4">
+            <h5 class="fw-bold text-primary mb-3">Professional Information</h5>
+            <hr>
+            <div class="row g-3">
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Specialties" class="form-label"></label>
+                    <select asp-for="Specialties"
+                            asp-items="Html.GetEnumSelectList<Specialties>()"
+                            class="form-select">
+                        <option value="">-- Select Specialty --</option>
+                    </select>
+                    <span asp-validation-for="Specialties" class="text-danger small"></span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3 mt-2">
+            <a asp-controller="Trainer"
+               asp-action="Index"
+               class="btn btn-outline-secondary px-4">
+                <i class="bi bi-arrow-left me-2"></i>Back
+            </a>
+            <button type="submit" class="btn btn-primary px-4">
+                <i class="bi bi-plus-circle me-2"></i>Add Trainer
+            </button>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,115 @@
+﻿@model IEnumerable<TrainerViewModel>
+@{
+    ViewData["Title"] = "Trainers";
+}
+
+@if (TempData["SuccessMessage"] is not null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is not null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="container">
+    <header class="d-flex justify-content-between align-items-center mt-5 mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">Trainers</h2>
+            <p class="text-muted">Professional fitness instructors</p>
+        </div>
+        <a asp-controller="Trainer" asp-action="Create"
+           class="btn btn-primary fw-medium rounded-pill px-4 py-2">
+            <i class="bi bi-plus-circle me-2"></i>Add Trainer
+        </a>
+    </header>
+
+    @if (Model is not null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-borderless align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Specialty</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var trainer in Model)
+                    {
+                        <tr>
+                            <td><strong>@trainer.Name</strong></td>
+                            <td>@trainer.Email</td>
+                            <td>@trainer.Phone</td>
+                            <td>@trainer.Gender</td>
+                            <td>
+                                <span class="badge bg-primary">@trainer.Specialties</span>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a asp-controller="Trainer"
+                                               asp-action="Details"
+                                               asp-route-id="@trainer.Id"
+                                               class="dropdown-item">
+                                                <i class="bi bi-eye me-2"></i>View Details
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a asp-controller="Trainer"
+                                               asp-action="Edit"
+                                               asp-route-id="@trainer.Id"
+                                               class="dropdown-item">
+                                                <i class="bi bi-pencil me-2"></i>Edit
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a asp-controller="Trainer"
+                                               asp-action="Delete"
+                                               asp-route-id="@trainer.Id"
+                                               class="dropdown-item text-danger">
+                                                <i class="bi bi-trash me-2"></i>Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-person-badge display-1 text-muted"></i>
+            <h4 class="mt-3 text-muted">No Trainers Yet</h4>
+            <p class="text-muted">Add your first trainer to get started.</p>
+            <a asp-controller="Trainer" asp-action="Create" class="btn btn-primary mt-2">
+                <i class="bi bi-plus-circle me-2"></i>Add Trainer
+            </a>
+        </div>
+    }
+</div>
