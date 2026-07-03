@@ -1,0 +1,88 @@
+﻿@model PlanViewModel
+@{
+    ViewData["Title"] = "Plan Details";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+
+                <div class="card-header text-white text-center py-5
+                    @(Model.IsActive ? "bg-primary" : "bg-secondary")">
+                    <i class="bi bi-award display-4 mb-3"></i>
+                    <h2 class="mb-0">@Model.Name</h2>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <!-- Price -->
+                    <div class="text-center mb-4 py-3 bg-light rounded">
+                        <div class="display-3 fw-bold text-primary">
+                            @Model.Price.ToString("N0")
+                        </div>
+                        <small class="text-muted fs-5">PKR</small>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <i class="bi bi-calendar-check text-primary fs-4 me-3"></i>
+                                <div>
+                                    <h6 class="mb-0 text-muted">Duration</h6>
+                                    <strong>@Model.DurationDays days</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="p-3 bg-light rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-file-text text-primary fs-4 me-3"></i>
+                                    <h6 class="mb-0 text-muted">Description</h6>
+                                </div>
+                                <p class="mb-0 ms-4">@Model.Description</p>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="d-flex align-items-center p-3 bg-light rounded">
+                                <i class="bi fs-4 me-3
+                                    @(Model.IsActive ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-danger")">
+                                </i>
+                                <div>
+                                    <h6 class="mb-0 text-muted">Status</h6>
+                                    @if (Model.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactive</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white border-0 px-4 pb-4 d-flex gap-2">
+                    <a asp-controller="Plan"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary flex-fill">
+                        <i class="bi bi-arrow-left me-2"></i>Back
+                    </a>
+                    <a asp-controller="Plan"
+                       asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-primary flex-fill">
+                        <i class="bi bi-pencil me-2"></i>Edit
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
