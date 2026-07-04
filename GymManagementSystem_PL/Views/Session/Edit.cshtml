@@ -117,4 +117,26 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Prevent end date being before start date on edit form
+        document.addEventListener("DOMContentLoaded", function () {
+            const startInput = document.querySelector('input[name="StartDate"]');
+            const endInput = document.querySelector('input[name="EndDate"]');
+            if (!startInput || !endInput) return;
+
+            const now = new Date();
+            const localNow = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+                .toISOString().slice(0, 16);
+
+            startInput.min = localNow;
+            endInput.min = startInput.value || localNow;
+
+            // Prevent end date being before start date
+            startInput.addEventListener("change", function () {
+                endInput.min = startInput.value;
+                if (endInput.value && endInput.value < startInput.value)
+                    endInput.value = "";
+            });
+        });
+    </script>
 }

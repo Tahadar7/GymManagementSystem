@@ -1,135 +1,28 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = "Access Denied";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Denied - Gym Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: #f8f9fa;
-                min-height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .wrapper {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 60px;
-                align-items: center;
-                background: white;
-                padding: 60px;
-                border-radius: 16px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-                max-width: 900px;
-                width: 90%;
-            }
-
-            .error-icon {
-                font-size: 64px;
-                margin-bottom: 20px;
-            }
-
-            h1 {
-                font-size: 42px;
-                font-weight: 700;
-                color: #222;
-                line-height: 1.2;
-                margin-bottom: 16px;
-            }
-
-                h1 span {
-                    color: #0033cc;
-                }
-
-            .error-message {
-                font-size: 15px;
-                color: #666;
-                line-height: 1.7;
-                margin-bottom: 16px;
-            }
-
-            .error-code {
-                background-color: #f0f0f0;
-                padding: 10px 16px;
-                border-radius: 6px;
-                font-family: 'Courier New', monospace;
-                font-size: 13px;
-                color: #444;
-                margin-bottom: 24px;
-                display: inline-block;
-            }
-
-            .btn-home {
-                padding: 12px 28px;
-                background: linear-gradient(135deg, #0033cc, #0055ff);
-                color: white;
-                border: none;
-                border-radius: 8px;
-                font-size: 15px;
-                font-weight: 600;
-                text-decoration: none;
-                display: inline-block;
-                transition: all 0.3s;
-            }
-
-                .btn-home:hover {
-                    background: linear-gradient(135deg, #0028a3, #0044dd);
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 12px rgba(0, 51, 204, 0.3);
-                    color: white;
-                }
-
-            .lock-section {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: 130px;
-            }
-
-            @@media (max-width: 768px) {
-                .wrapper {
-                    grid-template-columns: 1fr;
-                    padding: 40px 30px;
-                }
-
-                .lock-section {
-                    display: none;
-                }
-            }
-    </style>
-</head>
-<body>
-    <div class="wrapper">
-        <div>
-            <div class="error-icon">🚫</div>
-            <h1>Access <span>Denied</span></h1>
-            <p class="error-message">
-                You don't have permission to access this resource.
-                Your current account role doesn't grant you access to this section.
-            </p>
-            <div class="error-code">Error 403 — Forbidden Access</div>
-            <p class="error-message">
-                If you believe this is a mistake, please contact the system administrator.
-            </p>
-            <a asp-action="Index" asp-controller="Home" class="btn-home">
-                Return to Home
-            </a>
-        </div>
-        <div class="lock-section">🔒</div>
+<div style="display:flex; flex-direction:column; gap:20px;">
+    <div style="font-size:64px;">🚫</div>
+    <h1 style="font-size:42px; font-weight:700; color:#222; line-height:1.2;">
+        Access <span style="color:#0033cc;">Denied</span>
+    </h1>
+    <p style="font-size:15px; color:#666; line-height:1.7;">
+        You don't have permission to access this resource.
+        Your current account role doesn't grant you access to this section.
+    </p>
+    <div style="background:#f0f0f0; padding:10px 16px; border-radius:6px;
+                font-family:'Courier New',monospace; font-size:13px; color:#444;">
+        Error 403 — Forbidden Access
     </div>
-</body>
-</html>
+    <p style="font-size:15px; color:#666; line-height:1.7;">
+        If you believe this is a mistake, please contact the system administrator.
+    </p>
+    <a asp-action="Index" asp-controller="Home" class="btn-auth"
+       style="width:fit-content; text-decoration:none; padding:12px 28px;">
+        Return to Home
+    </a>
+</div>
+
+@section InfoPanel { }
