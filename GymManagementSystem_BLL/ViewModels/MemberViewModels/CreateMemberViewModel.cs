@@ -38,7 +38,7 @@ namespace GymManagementSystem_BLL.ViewModels.MemberViewModels
         public int BuildingNumber { get; set; }
 
         [Required(ErrorMessage = "Street is required")]
-        [StringLength(30, MinimumLength = 2, ErrorMessage = "Street must be between 2 and 30 characters")]
+        [StringLength(30, MinimumLength = 1, ErrorMessage = "Street must be between 1 and 30 characters")]
         public string Street { get; set; } = null!;
 
         [Required(ErrorMessage = "City is required")]

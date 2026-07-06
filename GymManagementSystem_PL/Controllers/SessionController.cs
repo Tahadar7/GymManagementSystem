@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GymManagementSystem_PL.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin,Admin")]
     public class SessionController(ISessionService sessionService) : Controller
     {
         [HttpGet]

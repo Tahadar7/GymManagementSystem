@@ -17,7 +17,11 @@
                     <form asp-action="Create" method="post">
                         @Html.AntiForgeryToken()
 
-                        <div asp-validation-summary="All" class="alert alert-danger small"></div>
+                        @* Only show the validation summary if there are actual errors *@
+                        @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+                        {
+                            <div asp-validation-summary="All" class="alert alert-danger small"></div>
+                        }
 
                         <div class="row g-3">
 

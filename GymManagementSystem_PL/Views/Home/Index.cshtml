@@ -1,8 +1,168 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model AnalyticsViewModel
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+
+    <header class="mb-5">
+        <h2 class="fw-bold">Dashboard</h2>
+        <p class="text-muted">Gym overview at a glance</p>
+    </header>
+
+    <!-- Members & Trainers row -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-4 p-4">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                        <i class="bi bi-people-fill text-primary fs-2"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Total Members</h6>
+                        <h2 class="fw-bold mb-0">@Model.TotalMembers</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-4 p-4">
+                    <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                        <i class="bi bi-person-check-fill text-success fs-2"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Active Members</h6>
+                        <h2 class="fw-bold mb-0">@Model.ActiveMembers</h2>
+                        <small class="text-muted">with active membership</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-4 p-4">
+                    <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                        <i class="bi bi-person-badge-fill text-warning fs-2"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Total Trainers</h6>
+                        <h2 class="fw-bold mb-0">@Model.TotalTrainers</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Sessions row -->
+    <h5 class="fw-bold mb-3">Sessions Overview</h5>
+    <div class="row g-4">
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-4 p-4">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                        <i class="bi bi-calendar-plus-fill text-primary fs-2"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Upcoming Sessions</h6>
+                        <h2 class="fw-bold mb-0">@Model.UpcomingSessions</h2>
+                        <small class="text-muted">not yet started</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-4 p-4">
+                    <div class="rounded-circle bg-success bg-opacity-10 p-3">
+                        <i class="bi bi-calendar-check-fill text-success fs-2"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Ongoing Sessions</h6>
+                        <h2 class="fw-bold mb-0">@Model.OngoingSessions</h2>
+                        <small class="text-muted">currently in progress</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-4 p-4">
+                    <div class="rounded-circle bg-secondary bg-opacity-10 p-3">
+                        <i class="bi bi-calendar-x-fill text-secondary fs-2"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-1">Completed Sessions</h6>
+                        <h2 class="fw-bold mb-0">@Model.CompletedSessions</h2>
+                        <small class="text-muted">already finished</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Quick navigation links -->
+    <h5 class="fw-bold mt-5 mb-3">Quick Access</h5>
+    <div class="row g-3">
+
+        <div class="col-6 col-md-3">
+            <a asp-controller="Member" asp-action="Index"
+               class="card border-0 shadow-sm text-decoration-none text-dark h-100">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-people fs-1 text-primary mb-2 d-block"></i>
+                    <strong>Members</strong>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <a asp-controller="Trainer" asp-action="Index"
+               class="card border-0 shadow-sm text-decoration-none text-dark h-100">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-person-badge fs-1 text-warning mb-2 d-block"></i>
+                    <strong>Trainers</strong>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-3">
+    <a asp-controller="Category" asp-action="Index"
+       class="card border-0 shadow-sm text-decoration-none text-dark h-100">
+        <div class="card-body text-center py-4">
+            <i class="bi bi-tag fs-1 text-info mb-2 d-block"></i>
+            <strong>Categories</strong>
+        </div>
+    </a>
+</div>
+
+        <div class="col-6 col-md-3">
+            <a asp-controller="Plan" asp-action="Index"
+               class="card border-0 shadow-sm text-decoration-none text-dark h-100">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-award fs-1 text-success mb-2 d-block"></i>
+                    <strong>Plans</strong>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <a asp-controller="Session" asp-action="Index"
+               class="card border-0 shadow-sm text-decoration-none text-dark h-100">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-calendar-event fs-1 text-danger mb-2 d-block"></i>
+                    <strong>Sessions</strong>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
 </div>

@@ -20,6 +20,21 @@ namespace GymManagementSystem_BLL.ViewModels.SessionViewModels
             public string TimeRangeDisplay => $"{StartDate:hh:mm tt} - {EndDate:hh:mm tt}";
             public TimeSpan Duration => EndDate - StartDate;
 
+            // Fix: show days when duration is more than 24 hours
+public string DurationDisplay
+{
+    get
+    {
+        var d = Duration;
+        if (d.TotalDays >= 1)
+            return $"{(int)d.TotalDays} day(s) {d.Hours} hr {d.Minutes} min";
+        else if (d.TotalHours >= 1)
+            return $"{d.Hours} hr {d.Minutes} min";
+        else
+            return $"{d.Minutes} min";
+    }
+}
+
             public string Status
             {
                 get

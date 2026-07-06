@@ -12,26 +12,27 @@ namespace GymManagementSystem_BLL.Services
         {
             try
             {
+                // Check if user already exists
                 var existingUser = await userManager.FindByEmailAsync(model.Email);
                 if (existingUser is not null)
                 {
+                    logger.LogWarning("Registration attempted with existing email: {Email}", model.Email);
                     return false;
                 }
 
+                // Create user object
                 var user = new ApplicationUser
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    UserName = model.Email // Identity uses UserName for login so set email to username
+                    UserName = model.Email
                 };
 
-                // CreateAsync handles password hashing automatically
+                // Create user in database
                 var result = await userManager.CreateAsync(user, model.Password);
-
-                if (!result.Succeeded)  // Check if result is not successful
+                if (!result.Succeeded)
                 {
-                    // Log each Identity error
                     foreach (var error in result.Errors)
                     {
                         logger.LogError("Registration failed for {Email}: {Code} - {Description}",
@@ -40,6 +41,25 @@ namespace GymManagementSystem_BLL.Services
                     return false;
                 }
 
+                // Assign Admin role
+                var roleResult = await userManager.AddToRoleAsync(user, "Admin");
+                if (!roleResult.Succeeded)
+                {
+                    // Delete the user since role assignment failed
+                    var deleteResult = await userManager.DeleteAsync(user);
+
+                    if (deleteResult.Succeeded)
+                    {
+                        logger.LogError("Failed to assign Admin role to {Email}. User was deleted.",
+                            model.Email);
+                    }
+
+                    return false;
+                }
+
+                // Everything succeeded
+                logger.LogInformation("User {Email} registered successfully with Admin role. UserId: {UserId}",
+                    model.Email, user.Id);
                 return true;
             }
             catch (Exception ex)

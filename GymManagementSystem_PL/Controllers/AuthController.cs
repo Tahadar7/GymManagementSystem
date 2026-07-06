@@ -1,6 +1,7 @@
 ﻿using GymManagementSystem_BLL.Interfaces;
 using GymManagementSystem_BLL.ViewModels.AccountViewModels;
 using GymManagementSystem_DAL.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,18 +61,15 @@ namespace GymManagementSystem_PL.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Register()
         {
-            if (signInManager.IsSignedIn(User))
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -99,6 +97,13 @@ namespace GymManagementSystem_PL.Controllers
             await signInManager.SignOutAsync();
             return RedirectToAction(nameof(Login));
         }
+
+        [HttpGet]
+[Authorize]
+public IActionResult LogoutConfirm()
+{
+    return View();
+}
 
 
         [HttpGet]

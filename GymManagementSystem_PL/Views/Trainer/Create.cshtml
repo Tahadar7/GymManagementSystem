@@ -11,7 +11,11 @@
     <form asp-action="Create" method="post">
         @Html.AntiForgeryToken()    <!--token returns which is validated to confirm the request-->
 
-        <div asp-validation-summary="All" class="alert alert-danger small"></div>
+        @* Only show the validation summary if there are actual errors *@
+        @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+        {
+            <div asp-validation-summary="All" class="alert alert-danger small"></div>
+        }
 
         <div class="card border-0 shadow p-4 mb-4">
             <h5 class="fw-bold text-primary mb-3">Personal Information</h5>

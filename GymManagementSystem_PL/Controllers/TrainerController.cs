@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymManagementSystem_PL.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin,Admin")]
     public class TrainerController(ITrainerService trainerService) : Controller
     {
         [HttpGet]

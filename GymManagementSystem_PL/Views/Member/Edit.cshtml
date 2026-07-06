@@ -34,7 +34,10 @@
                         <!-- Pass hidden values so they aren't lost on submit -->
                         <input asp-for="Photo" type="hidden" />
 
-                        <div asp-validation-summary="All" class="alert alert-danger small"></div>
+                        @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div asp-validation-summary="All" class="text-danger mb-3 small"></div>
+}
 
                         <div class="row g-3">
 

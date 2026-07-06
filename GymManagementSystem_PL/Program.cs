@@ -21,6 +21,8 @@ builder.Services.AddScoped<ITrainerService, TrainerService>();
 builder.Services.AddScoped<IPlanService, PlanService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // Register ASP.NET Core Identity roles
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(config =>
@@ -34,7 +36,31 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(config =>
 })
 .AddEntityFrameworkStores<GymDBContext>();
 
+builder.Services.ConfigureApplicationCookie(option =>
+{
+    option.LoginPath = "/Auth/Login";
+    option.AccessDeniedPath = "/Auth/AccessDenied";
+});
+
 var app = builder.Build();
+
+// Seed roles at startup
+// Runs every startup but does nothing if roles already exist
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roles = { "SuperAdmin", "Admin" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+        // Super Admin added through the database
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -54,7 +80,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Auth}/{action=Login}/{id?}")
     .WithStaticAssets();
 
 

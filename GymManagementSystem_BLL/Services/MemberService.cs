@@ -1,6 +1,8 @@
 ﻿using GymManagementSystem_BLL.Interfaces;
 using GymManagementSystem_BLL.ViewModels.HealthRecordViewModels;
 using GymManagementSystem_BLL.ViewModels.MemberViewModels;
+using GymManagementSystem_BLL.ViewModels.PlanViewModels;
+using GymManagementSystem_BLL.ViewModels.SessionViewModels;
 using GymManagementSystem_DAL.Data.DBContexts;
 using GymManagementSystem_DAL.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -235,6 +237,125 @@ namespace GymManagementSystem_BLL.Services
                 return false;
             }
         }
+
+        public async Task<List<PlanViewModel>> GetAvailablePlansAsync()
+{
+    // Only show active plans
+    return await context.Plans
+        .AsNoTracking()
+        .Where(p => p.IsActive)
+        .Select(p => new PlanViewModel
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Description,
+            DurationDays = p.DurationDays,
+            Price = p.Price,
+            IsActive = p.IsActive
+        })
+        .ToListAsync();
+}
+
+public async Task<List<SessionViewModel>> GetAvailableSessionsAsync()
+{
+    // Only show upcoming sessions with available slots
+    var now = DateTime.Now;
+
+    var sessions = await context.Sessions
+        .AsNoTracking()
+        .Include(s => s.SessionTrainer)
+        .Include(s => s.SessionCategory)
+        .Where(s => s.StartDate > now)
+        .ToListAsync();
+
+    var result = new List<SessionViewModel>();
+    foreach (var session in sessions)
+    {
+        var bookedCount = await context.MemberSessions
+            .CountAsync(ms => ms.SessionId == session.Id);
+
+        // Only show sessions with available slots
+        if (bookedCount < session.Capacity)
+        {
+            result.Add(new SessionViewModel
+            {
+                Id = session.Id,
+                CategoryName = session.SessionCategory.CategoryName,
+                TrainerName = session.SessionTrainer.Name,
+                Description = session.Description,
+                StartDate = session.StartDate,
+                EndDate = session.EndDate,
+                Capacity = session.Capacity,
+                AvailableSlots = session.Capacity - bookedCount
+            });
+        }
+    }
+    return result;
+}
+
+public async Task<bool> AssignPlanAsync(int memberId, int planId)
+{
+    try
+    {
+        var member = await context.Members.FindAsync(memberId);
+        var plan = await context.Plans.FindAsync(planId);
+        if (member is null || plan is null || !plan.IsActive) return false;
+
+        var membership = new MemberShip
+        {
+            MemberId = memberId,
+            PlanId = planId,
+            EndDate = DateTime.Now.AddDays(plan.DurationDays)
+        };
+
+        context.MemberShips.Add(membership);
+        return await context.SaveChangesAsync() > 0;
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Failed to assign plan {PlanId} to member {MemberId}", planId, memberId);
+        return false;
+    }
+}
+
+public async Task<bool> BookSessionAsync(int memberId, int sessionId)
+{
+    try
+    {
+        // Check member and session exist
+        var member = await context.Members.FindAsync(memberId);
+        var session = await context.Sessions.FindAsync(sessionId);
+        if (member is null || session is null) return false;
+
+        // Session must be upcoming
+        if (session.StartDate <= DateTime.Now) return false;
+
+        // Check not already booked
+        var alreadyBooked = await context.MemberSessions
+            .AnyAsync(ms => ms.MemberId == memberId && ms.SessionId == sessionId);
+        if (alreadyBooked) return false;
+
+        // Check capacity
+        var bookedCount = await context.MemberSessions
+            .CountAsync(ms => ms.SessionId == sessionId);
+        if (bookedCount >= session.Capacity) return false;
+
+        var memberSession = new MemberSession
+        {
+            MemberId = memberId,
+            SessionId = sessionId,
+            IsAttend = false
+        };
+
+        context.MemberSessions.Add(memberSession);
+        return await context.SaveChangesAsync() > 0;
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Failed to book session {SessionId} for member {MemberId}", sessionId, memberId);
+        return false;
+    }
+}
 
         #region Helper Methods
 

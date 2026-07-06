@@ -11,7 +11,11 @@
     <form asp-action="Create" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
 
-        <div asp-validation-summary="All" class="alert alert-danger small" style="display:none"></div>
+        @* Only show the validation summary if there are actual errors *@
+        @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+        {
+            <div asp-validation-summary="All" class="alert alert-danger small"></div>
+        }
 
         <ul class="nav nav-tabs mb-4" id="createMemberTabs" role="tablist">
             <li class="nav-item" role="presentation">

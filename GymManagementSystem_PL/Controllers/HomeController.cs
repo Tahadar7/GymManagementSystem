@@ -1,24 +1,16 @@
-using System.Diagnostics;
+using GymManagementSystem_BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using GymManagementSystem_PL.Models;
 
-namespace GymManagementSystem_PL.Controllers;
-
-public class HomeController : Controller
+namespace GymManagementSystem_PL.Controllers
 {
-    public IActionResult Index()
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    public class HomeController(IAnalyticsService analyticsService) : Controller
     {
-        return View();
-    }
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        public async Task<IActionResult> Index()
+        {
+            var data = await analyticsService.GetAnalyticsDataAsync();
+            return View(data);
+        }
     }
 }

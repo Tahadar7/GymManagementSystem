@@ -24,7 +24,9 @@ namespace GymManagementSystem_BLL.ViewModels.AccountViewModels
 
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters")]
+        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}$",
+            ErrorMessage = "Password must contain at least: one uppercase letter, one lowercase letter, one digit, and one special character")]
         public string Password { get; set; } = null!;
 
         [Required(ErrorMessage = "Confirm password is required")]
