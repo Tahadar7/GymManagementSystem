@@ -14,7 +14,7 @@
 
     @if (Model is not null && Model.Any())
     {
-        <div class="table-responsive">
+        <div class="table-responsive" style="overflow: visible">
             <table class="table table-borderless align-middle">
                 <thead class="table-light">
                     <tr>
@@ -65,39 +65,50 @@
                                 <div class="dropdown">
                                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
                                             type="button"
-                                            data-bs-toggle="dropdown">
-                                        Actions
+                                            data-bs-toggle="dropdown"
+                                            data-bs-auto-close="outside">
+                                        <i class="bi bi-three-dots-vertical me-1"></i>Actions
                                     </button>
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu shadow">
                                         <li>
-                                            <a asp-controller="Member"
-                                               asp-action="Details"
+                                            <a asp-controller="Member" asp-action="Details"
                                                asp-route-id="@member.Id"
                                                class="dropdown-item">
-                                                <i class="bi bi-person-lines-fill me-2"></i>View Details
+                                                <i class="bi bi-person-lines-fill me-2 text-primary"></i>View Details
                                             </a>
                                         </li>
                                         <li>
-                                            <a asp-controller="Member"
-                                               asp-action="HealthRecord"
+                                            <a asp-controller="Member" asp-action="HealthRecord"
                                                asp-route-id="@member.Id"
                                                class="dropdown-item">
-                                                <i class="bi bi-heart-pulse me-2"></i>Health Record
-                                            </a>
-                                        </li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
-                                            <a asp-controller="Member"
-                                               asp-action="Edit"
-                                               asp-route-id="@member.Id"
-                                               class="dropdown-item">
-                                                <i class="bi bi-pencil me-2"></i>Edit
+                                                <i class="bi bi-heart-pulse me-2 text-info"></i>Health Record
                                             </a>
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
-                                            <a asp-controller="Member"
-                                               asp-action="Delete"
+                                            <a asp-controller="Member" asp-action="AssignPlan"
+                                               asp-route-id="@member.Id"
+                                               class="dropdown-item">
+                                                <i class="bi bi-award me-2 text-success"></i>Assign Plan
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="Member" asp-action="BookSession"
+                                               asp-route-id="@member.Id"
+                                               class="dropdown-item">
+                                                <i class="bi bi-calendar-plus me-2 text-warning"></i>Book Session
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a asp-controller="Member" asp-action="Edit"
+                                               asp-route-id="@member.Id"
+                                               class="dropdown-item">
+                                                <i class="bi bi-pencil me-2 text-secondary"></i>Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="Member" asp-action="Delete"
                                                asp-route-id="@member.Id"
                                                class="dropdown-item text-danger">
                                                 <i class="bi bi-trash me-2"></i>Delete

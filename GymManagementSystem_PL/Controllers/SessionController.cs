@@ -63,7 +63,7 @@ namespace GymManagementSystem_PL.Controllers
             var session = await sessionService.GetForEditAsync(id);
             if (session is null)
             {
-                TempData["ErrorMessage"] = "Session not found or cannot be edited.";
+                TempData["ErrorMessage"] = "Session may be ongoing or has members";
                 return RedirectToAction(nameof(Index));
             }
 

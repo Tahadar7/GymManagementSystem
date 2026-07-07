@@ -258,9 +258,9 @@ namespace GymManagementSystem_BLL.Services
 
 public async Task<List<SessionViewModel>> GetAvailableSessionsAsync()
 {
-    // Only show upcoming sessions with available slots
     var now = DateTime.Now;
 
+    // Load upcoming sessions with Trainer and Category in one query
     var sessions = await context.Sessions
         .AsNoTracking()
         .Include(s => s.SessionTrainer)
@@ -268,43 +268,51 @@ public async Task<List<SessionViewModel>> GetAvailableSessionsAsync()
         .Where(s => s.StartDate > now)
         .ToListAsync();
 
-    var result = new List<SessionViewModel>();
-    foreach (var session in sessions)
-    {
-        var bookedCount = await context.MemberSessions
-            .CountAsync(ms => ms.SessionId == session.Id);
+    var sessionIds = sessions.Select(s => s.Id).ToList();
 
-        // Only show sessions with available slots
-        if (bookedCount < session.Capacity)
+    var bookedCounts = await context.MemberSessions
+        .Where(ms => sessionIds.Contains(ms.SessionId))
+        .GroupBy(ms => ms.SessionId)
+        .Select(g => new { SessionId = g.Key, Count = g.Count() })
+        .ToDictionaryAsync(x => x.SessionId, x => x.Count);
+
+    // Filter out full sessions and map to ViewModels in memory
+    return sessions
+        .Select(s => new
         {
-            result.Add(new SessionViewModel
-            {
-                Id = session.Id,
-                CategoryName = session.SessionCategory.CategoryName,
-                TrainerName = session.SessionTrainer.Name,
-                Description = session.Description,
-                StartDate = session.StartDate,
-                EndDate = session.EndDate,
-                Capacity = session.Capacity,
-                AvailableSlots = session.Capacity - bookedCount
-            });
-        }
-    }
-    return result;
+            Session = s,
+            BookedCount = bookedCounts.GetValueOrDefault(s.Id)
+        })
+        .Where(x => x.BookedCount < x.Session.Capacity) // only sessions with slots
+        .Select(x => new SessionViewModel
+        {
+            Id = x.Session.Id,
+            CategoryName = x.Session.SessionCategory.CategoryName,
+            TrainerName = x.Session.SessionTrainer.Name,
+            Description = x.Session.Description,
+            StartDate = x.Session.StartDate,
+            EndDate = x.Session.EndDate,
+            Capacity = x.Session.Capacity,
+            AvailableSlots = x.Session.Capacity - x.BookedCount
+        })
+        .ToList();
 }
 
 public async Task<bool> AssignPlanAsync(int memberId, int planId)
 {
     try
     {
+        // Confirm member and plan both exist and plan is active
         var member = await context.Members.FindAsync(memberId);
         var plan = await context.Plans.FindAsync(planId);
-        if (member is null || plan is null || !plan.IsActive) return false;
+        if (member is null || plan is null || !plan.IsActive)
+            return false;
 
         var membership = new MemberShip
         {
             MemberId = memberId,
             PlanId = planId,
+            // EndDate calculated from plan duration starting today
             EndDate = DateTime.Now.AddDays(plan.DurationDays)
         };
 
@@ -322,20 +330,19 @@ public async Task<bool> BookSessionAsync(int memberId, int sessionId)
 {
     try
     {
-        // Check member and session exist
         var member = await context.Members.FindAsync(memberId);
         var session = await context.Sessions.FindAsync(sessionId);
         if (member is null || session is null) return false;
 
-        // Session must be upcoming
+        // Session must be upcoming — can't book a started/completed session
         if (session.StartDate <= DateTime.Now) return false;
 
-        // Check not already booked
+        // Check member hasn't already booked this session
         var alreadyBooked = await context.MemberSessions
             .AnyAsync(ms => ms.MemberId == memberId && ms.SessionId == sessionId);
         if (alreadyBooked) return false;
 
-        // Check capacity
+        // Check session still has capacity
         var bookedCount = await context.MemberSessions
             .CountAsync(ms => ms.SessionId == sessionId);
         if (bookedCount >= session.Capacity) return false;
@@ -344,7 +351,7 @@ public async Task<bool> BookSessionAsync(int memberId, int sessionId)
         {
             MemberId = memberId,
             SessionId = sessionId,
-            IsAttend = false
+            IsAttend = false // attendance marked later
         };
 
         context.MemberSessions.Add(memberSession);

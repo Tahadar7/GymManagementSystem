@@ -81,7 +81,7 @@ namespace GymManagementSystem_PL.Controllers
 
             if (!success)
             {
-                ModelState.AddModelError(string.Empty, "Registration failed.");
+                ModelState.AddModelError(string.Empty, "Registration failed. Email may already exists");
                 return View(model);
             }
 
@@ -99,12 +99,11 @@ namespace GymManagementSystem_PL.Controllers
         }
 
         [HttpGet]
-[Authorize]
-public IActionResult LogoutConfirm()
-{
-    return View();
-}
-
+        [Authorize]
+        public IActionResult LogoutConfirm()
+        {
+            return View();
+        }
 
         [HttpGet]
         public IActionResult AccessDenied()

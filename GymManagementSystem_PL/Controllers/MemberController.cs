@@ -49,6 +49,9 @@ namespace GymManagementSystem_PL.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateMemberViewModel model)
         {
+
+            ModelState.Remove("HealthRecord.Note");
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -61,7 +64,7 @@ namespace GymManagementSystem_PL.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to create member";
+                TempData["ErrorMessage"] = "Failed to create member. Email or phone may already exists.";
             }
 
             return RedirectToAction(nameof(Index));
@@ -132,5 +135,66 @@ namespace GymManagementSystem_PL.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> AssignPlan(int id)
+        {
+            var member = await memberService.GetByIdAsync(id);
+            if (member is null)
+            {
+                TempData["ErrorMessage"] = "Member not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var plans = await memberService.GetAvailablePlansAsync();
+            ViewBag.MemberId = id;
+            ViewBag.MemberName = member.Name;
+            return View(plans);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignPlan(int id, int planId)
+        {
+            var success = await memberService.AssignPlanAsync(id, planId);
+            if (success)
+                TempData["SuccessMessage"] = "Plan assigned successfully.";
+            else
+                TempData["ErrorMessage"] = "Failed to assign plan.";
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> BookSession(int id)
+        {
+            var member = await memberService.GetByIdAsync(id);
+            if (member is null)
+            {
+                TempData["ErrorMessage"] = "Member not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var sessions = await memberService.GetAvailableSessionsAsync();
+            ViewBag.MemberId = id;
+            ViewBag.MemberName = member.Name;
+            return View(sessions);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BookSession(int id, int sessionId)
+        {
+            var success = await memberService.BookSessionAsync(id, sessionId);
+            if (success)
+                TempData["SuccessMessage"] = "Session booked successfully.";
+            else
+                TempData["ErrorMessage"] = "Failed to book session. It may be full or already booked.";
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
     }
 }

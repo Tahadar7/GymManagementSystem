@@ -75,6 +75,8 @@ namespace GymManagementSystem_BLL.Services
         {
             try
             {
+                logger.LogInformation("CreateSession called - TrainerId: {T}, CategoryId: {C}, Start: {S}, End: {E}",
+            model.TrainerId, model.CategoryId, model.StartDate, model.EndDate);
                 if (!await TrainerExistsAsync(model.TrainerId))
                 {
                     return false;
@@ -87,6 +89,8 @@ namespace GymManagementSystem_BLL.Services
 
                 if (!IsValidDateRange(model.StartDate, model.EndDate))
                 {
+                    logger.LogWarning("Invalid date range - Start: {S}, End: {E}, Now: {N}",
+                model.StartDate, model.EndDate, DateTime.Now);
                     return false;
                 }
 
@@ -232,10 +236,9 @@ namespace GymManagementSystem_BLL.Services
             return await context.Categories.AnyAsync(c => c.Id == categoryId);
         }
 
-        private static bool IsValidDateRange(DateTime start, DateTime end)
-        {
-            return start < end && start > DateTime.Now; // Start date must be in the future and before end date
-        }
+        // Allow sessions starting within the next 5 minutes to account for form fill time
+        private static bool IsValidDateRange(DateTime start, DateTime end) =>
+            start < end && start >= DateTime.Now.AddMinutes(-5);
 
         #endregion
     }
